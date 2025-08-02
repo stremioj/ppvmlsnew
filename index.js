@@ -7,9 +7,15 @@ module.exports = (req, res) => {
         version: "1.0.0",
         name: "PPVMLS Stream",
         description: "Live stream for San Diego FC vs Tigres UANL",
-        resources: ["stream"],
+        resources: ["catalog", "stream"],
         types: ["movie"],
-        catalogs: []
+        catalogs: [
+            {
+                type: "movie",
+                id: "ppvmls_catalog",
+                name: "PPV Live Matches"
+            }
+        ]
     };
 
     if (req.url === "/manifest.json") {
@@ -17,7 +23,21 @@ module.exports = (req, res) => {
         return res.end(JSON.stringify(manifest));
     }
 
-    if (req.url.startsWith("/stream/")) {
+    if (req.url.startsWith("/catalog/movie/ppvmls_catalog.json")) {
+        const catalog = {
+            metas: [{
+                id: "ppvmls_stream",
+                type: "movie",
+                name: "San Diego FC vs Tigres UANL – Live",
+                poster: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Soccer_Ball.svg/1200px-Soccer_Ball.svg.png",
+                description: "Watch San Diego FC vs Tigres UANL live now."
+            }]
+        };
+        res.setHeader("Content-Type", "application/json");
+        return res.end(JSON.stringify(catalog));
+    }
+
+    if (req.url.startsWith("/stream/movie/ppvmls_stream.json")) {
         const stream = {
             streams: [{
                 title: "Live Stream",
